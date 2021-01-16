@@ -7,8 +7,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         searchComponent: false,
-        newRunComponent: false,
+        newRunComponent: true,
         starter: true,
+        currentPage: '',
+        runKey: null,
+        editComponent: false,
         runs: [{
                 date: '20.12.2017',
                 speed: 15,
@@ -39,11 +42,30 @@ export default new Vuex.Store({
         viewSearchComponent(state) {
             state.searchComponent = !state.searchComponent;
         },
-        viewnewRunComponent(state) {
+        viewNewRunComponent(state) {
             state.newRunComponent = !state.newRunComponent;
+            console.log(state.newRunComponent);
         },
         viewHeader(state, starter) {
             state.starter = starter;
+        },
+        addNewRuns(state, run) {
+            state.runs.push(run);
+        },
+        changeRun(state, run) {
+            state.runs[state.runKey].speed = run.speed;
+            state.runs[state.runKey].distance = run.distance;
+            state.runs[state.runKey].time = run.time;
+        },
+        changeCurrentPage(state, page) {
+            state.currentPage = page;
+        },
+        changeRunKey(state, runKey) {
+            state.runKey = runKey;
+            state.editComponent = true;
+        },
+        closeEditComponent(state) {
+            state.editComponent = false;
         }
     },
     actions: {
@@ -51,10 +73,27 @@ export default new Vuex.Store({
             commit('viewSearchComponent');
         },
         viewNewRun({commit}) {
-            commit('viewnewRunComponent');
+            commit('viewNewRunComponent');
         },
         viewFullHeader({commit}, starter) {
             commit('viewHeader', starter);
+        },
+        addRuns({commit}, run) {
+            commit('addNewRuns', run);
+            commit('viewNewRunComponent');
+        },
+        getCurrentPage({commit}, page) {
+            commit('changeCurrentPage', page);
+        },
+        getCurrentRunKey({commit}, runKey) {
+            commit('changeRunKey', runKey);
+        },
+        closeEdit({commit}) {
+            commit('closeEditComponent');
+        },
+        changeRunComponent({commit}, run) {
+            commit('changeRun', run);
+            commit('closeEditComponent');
         }
     },
     modules: {}

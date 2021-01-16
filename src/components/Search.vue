@@ -8,6 +8,17 @@
     </form>
 </template>
 
+<script>
+    export default {
+        data() {
+            return {
+                start: null,
+                end: null
+            }
+        },
+    }
+</script>
+
 <style lang="scss" scoped>
     .form {
         width: 100%;

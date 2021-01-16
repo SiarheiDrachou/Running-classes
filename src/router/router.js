@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import LetMeIn from '../views/LetMeIn.vue'
 import ListRunning from '../views/ListRunning.vue'
+import Info from '../views/Info.vue'
 Vue.use(VueRouter)
 
   const routes = [
@@ -11,9 +12,15 @@ Vue.use(VueRouter)
     component: LetMeIn,
   },
   {
-    path: '/ListRunning',
+    path: '/Jogs',
     name: 'ListRunning',
     component: ListRunning,
+    props: true
+  },
+  {
+    path: '/Info',
+    name: 'Info',
+    component: Info,
     props: true
   }
 ]

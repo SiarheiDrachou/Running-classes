@@ -1,6 +1,9 @@
 <template>
     <form class="form">
-        <img src="../assets/img/cancel.svg" alt="" class="form__img" @click="viewNewRun">
+        <label for="Speed" class="form__label ml">Speed</label>
+        <input id="Speed" type="number" class="form__input ml-30" v-model="speed" />
+
+        <br />
 
         <label for="Distance" class="form__label">Distance</label>
         <input id="Distance" type="number" class="form__input ml-15" v-model="distance" />
@@ -12,41 +15,51 @@
 
         <br />
 
-        <label for="Date" class="form__label ml">Date</label>
-        <input id="Date" type="date" class="form__input ml-40" v-model="date" />
+        <button class="form__button" @click.prevent="changeInfo">Save</button>
 
-        <button class="form__button" @click.prevent="getInfo">Save</button>
+        <br />
+
+        <button class="form__button" @click.prevent="cancel">Cancel</button>
     </form>
 </template>
 
 <script>
+    import { mapState } from 'vuex'
     import { mapActions } from 'vuex'
 
     export default {
         data() {
             return {
+                speed: null,
                 distance: null,
-                time: null,
-                date: null
+                time: null
             }
+        },
+        computed: {
+            ...mapState({
+                runKey: state => state.runKey,
+                runs: state => state.runs
+            })
         },
         methods: {
             ...mapActions({
-                viewNewRun: 'viewNewRun',
-                addRuns: 'addRuns'
+                getCurrentRunKey: 'getCurrentRunKey',
+                changeRunComponent: 'changeRunComponent',
+                closeEdit: 'closeEdit'
             }),
-            getInfo() {
-                let run = {};
+            changeInfo() {
+                let run = this.runs[this.runKey];
 
-                run = {
-                    time: this.time + ' min',
-                    date: this.date.split('-').reverse().join('.'),
-                    distance: this.distance + ' km'
-                }
+                run.time = this.time + ' min';
+                run.speed = this.speed;
+                run.distance = this.distance + ' km';
 
-                this.addRuns(run);
+                this.changeRunComponent(run);
+            },
+            cancel() {
+                this.closeEdit();
             }
-        }
+        },
     }
 </script>
 
@@ -59,7 +72,7 @@
         background-color: #7ed321;
         margin: 0 auto;
         margin-top: 118px;
-        padding: 100px 88px 47px 88px;
+        padding: 47px 88px;
 
         &__input {
             width: 236px;
@@ -77,11 +90,13 @@
             width: 320px;
             padding: 14px 0;
             border-radius: 25.2px;
-            border: solid 2px #979797;
+            border: solid 2px white;
             font-size: 12.6px;
             font-weight: bold;
             margin: 0 auto;
             margin-top: 20px;
+            color: white;
+            background-color: transparent;
         }
 
         &__img {
@@ -98,8 +113,8 @@
             margin-left: 37px;
         }
 
-        .ml-40 {
-            margin-left: 40px;
+        .ml-30 {
+            margin-left: 30px;
         }
     }
 </style>

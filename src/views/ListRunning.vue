@@ -2,11 +2,13 @@
     <main class="main">
         <Search v-if="searchComponent" />
 
-        <div class="main-container" v-if="newRunComponent">
-            <Card v-for="(run, id) in runs" :key="id" :run="run" />
+        <div class="main-container" v-if="newRunComponent && !editComponent">
+            <Card v-for="(run, id) in runs" :key="id" :run="run" :id="id" />
         </div>
 
-        <NewRun  v-else />
+        <ChangeRunInfo v-if="editComponent"/>
+
+        <NewRun  v-if="!newRunComponent" />
 
         <img src="../assets/img/add.svg" alt="" class="main__img" @click="viewNewRun">
     </main>
@@ -16,6 +18,7 @@
     import Search from '../components/Search'
     import Card from '../components/Card'
     import NewRun from '../components/NewRun'
+    import ChangeRunInfo from '../components/ChangeRunInfo'
     import { mapState } from 'vuex'
     import { mapActions } from 'vuex'
 
@@ -23,19 +26,25 @@
         components: {
             Search,
             Card,
-            NewRun
+            NewRun,
+            ChangeRunInfo
         },
         computed: {
             ...mapState({
                 searchComponent: state => state.searchComponent,
                 newRunComponent: state => state.newRunComponent,
-                runs: state => state.runs
+                runs: state => state.runs,
+                editComponent: state => state.editComponent
             })
         },
         methods: {
             ...mapActions({
-                viewNewRun: 'viewNewRun'
+                viewNewRun: 'viewNewRun',
+                getCurrentPage: 'getCurrentPage'
             })
+        },
+        mounted() {
+            this.getCurrentPage('ListRunning');
         }
     }
 </script>

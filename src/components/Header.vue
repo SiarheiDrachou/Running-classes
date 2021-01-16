@@ -7,15 +7,26 @@
         <nav class="header-nav" v-if="!starter">
             <ul class="header-nav__list">
                 <li class="header-nav__list__item">
-                    <a class="header-nav__list__item__link">JOGS</a>
+                    <router-link 
+                        to="/Jogs" 
+                        class="header-nav__list__item__link"
+                        :class="{underline: currentPage == 'ListRunning'}"
+                    >JOGS</router-link>
                 </li>
                 
                 <li class="header-nav__list__item">
-                    <a class="header-nav__list__item__link">INFO</a>                        
+                    <router-link 
+                        to="/Info" 
+                        class="header-nav__list__item__link"
+                        :class="{underline: currentPage == 'Info'}"
+                    >INFO</router-link>                        
                 </li>
                 
                 <li class="header-nav__list__item">
-                    <a class="header-nav__list__item__link">CONTACT US</a>                        
+                    <a 
+                        class="header-nav__list__item__link"
+                        :class="{underline: currentPage == 'Contact'}"
+                    >CONTACT US</a>                        
                 </li>
                 
                 <li class="header-nav__list__item">
@@ -31,9 +42,14 @@
     import { mapState } from 'vuex'
 
     export default {
+        data() {
+            return {
+                page: null
+            }
+        },
         watch: {
             $route(to) {
-                if(to.name === 'LetMeIn') {
+                if(to.path == '/') {
                     this.viewFullHeader(true);
                 }
                 else {
@@ -44,13 +60,23 @@
         methods: {
             ...mapActions({
                 viewFullHeader: 'viewFullHeader',
-                viewSerch: 'viewSerch'
+                viewSerch: 'viewSerch',
+                getCurrentPage: 'getCurrentPage'
             })
         },
         computed: {
             ...mapState({
-                starter: state => state.starter
+                starter: state => state.starter,
+                currentPage: state => state.currentPage
             })
+        },
+        mounted() {
+            if(this.$route.path !== '/') {
+                this.viewFullHeader(false);
+            }
+            else {
+                this.viewFullHeader(true);
+            }
         }
     }
 </script>
@@ -81,8 +107,24 @@
                     font-size: 14px;
                     font-weight: bold;
                     color: white;
+
+                    &__link {
+                        color: white;
+                        text-decoration: none;
+                        position: relative;
+                    }
                 }
             }
         }
+    }
+
+    .underline::before {
+        content: ' ';
+        position: absolute;
+        left: 0;
+        bottom: -5px;
+        width: 100%;
+        height: 2px;
+        background-color: white;
     }
 </style>

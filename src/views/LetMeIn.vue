@@ -3,12 +3,14 @@
         <div class="main-login">
             <img src="../assets/img/bear-face.svg" alt="bear-face img" class="main-login__img">
 
-            <router-link to="/ListRunning" class="main-login__button">Let me in</router-link>
+            <router-link to="/Jogs" class="main-login__button">Let me in</router-link>
         </div>
     </main>
 </template>
 
 <script>
+    import { mapActions } from 'vuex'
+
     export default {
         data() {
             return {
@@ -20,11 +22,15 @@
                 let appEl = document.querySelector('#app').clientHeight;
                 
                 this.mainHeight = appEl - 116;
-            }
+            },
+            ...mapActions({
+                getCurrentPage: 'getCurrentPage'
+            })
         },
         mounted() {
             this.mainHeightResult();
-        },
+            this.getCurrentPage('LetMeIn');
+        }
     }
 </script>
 
