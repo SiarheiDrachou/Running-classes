@@ -46,16 +46,30 @@
     width: 615px;
     margin: 0 auto;
 
+    @media(max-width: 550px) {
+        padding-top: 25px;
+        width: 90%;
+    }
+
     &__header {
         font-size: 36px;
         color: green;
         margin-bottom: 15px;
+
+        @media(max-width: 550px) {
+            font-size: 25px;
+        }
     }
 
     &__text {
         color: gray;
         font-size: 14px;
         line-height: 1.71;
+
+        @media(max-width: 550px) {
+            font-size: 12px;
+            line-height: 24px;
+        }
     }
 }
 </style>

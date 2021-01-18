@@ -1,7 +1,19 @@
 <template>
     <main class="main" :style="{height: mainHeight + 'px'}">
         <div class="main-login">
-            <img src="../assets/img/bear-face.svg" alt="bear-face img" class="main-login__img">
+            <img 
+                src="../assets/img/bear-face.svg" 
+                alt="bear-face img" 
+                class="main-login__img" 
+                v-if="innerWidth > 550" 
+            />
+
+            <img 
+                src="../assets/img/bearFace.png" 
+                alt="bear-face img" 
+                class="main-login__img" 
+                v-else 
+            />
 
             <router-link to="/Jogs" class="main-login__button">Let me in</router-link>
         </div>
@@ -14,7 +26,8 @@
     export default {
         data() {
             return {
-                mainHeight: null
+                mainHeight: null,
+                innerWidth: null
             }
         },
         methods: {
@@ -30,6 +43,10 @@
         mounted() {
             this.mainHeightResult();
             this.getCurrentPage('LetMeIn');
+
+            window.onresize = () => {
+                this.innerWidth = window.innerWidth;
+            };
         }
     }
 </script>
@@ -52,8 +69,16 @@
             flex-wrap: nowrap;
             align-items: center;
 
+            @media(max-width: 550px) {
+                background-color: white;
+            }
+
             &__img {
                 margin-top: 77px;
+
+                @media(max-width: 550px) {
+                    width: 160px;
+                }
             }
 
             &__button {
@@ -64,8 +89,13 @@
                 background-color: transparent;
                 font-size: 18px;
                 font-weight: bold;
-                color: white;
+                color: rgb(233, 144, 249);
                 text-decoration: none;
+
+                @media(max-width: 550px) {
+                    margin-top: 103px;
+                    border: solid 3px rgb(233, 144, 249);
+                }
             }
         }
     }

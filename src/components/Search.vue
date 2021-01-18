@@ -1,19 +1,42 @@
 <template>
     <form class="form">
         <label for="start" class="form__label">Date from</label>
-        <input id="start" type="text" class="form__input" />
+        <input id="start" type="date" class="form__input" v-model="start"/>
 
         <label for="end" class="form__label ml">Date to</label>
-        <input id="end" type="text" class="form__input" />
+        <input id="end" type="date" class="form__input" v-model="end"/>
     </form>
 </template>
 
 <script>
+    import { mapActions } from 'vuex'
+
     export default {
         data() {
             return {
                 start: null,
                 end: null
+            }
+        },
+        methods: {
+            ...mapActions({
+                getStartDate: 'getStartDate',
+                getEndDate: 'getEndDate',
+                sortRuns: 'sortRuns'
+            }),
+        },
+        watch: {
+            start: function(start) {
+                let startDate = start.split('-').reverse().join('.');
+
+                this.getStartDate(startDate);
+                this.sortRuns();
+            },
+            end: function(end) {
+                let endDate = end.split('-').reverse().join('.');
+
+                this.getEndDate(endDate);
+                this.sortRuns();
             }
         },
     }
@@ -32,8 +55,12 @@
             border-radius: 11px;
             border: solid 1px #979797;
             margin-left: 15px;
-            width: 100px;
+            width: 130px;
             height: 31px;
+
+            @media(max-width: 550px) {
+                width: 90px;
+            }
         }
 
         &__label {
@@ -42,6 +69,10 @@
 
         .ml {
             margin-left: 45px;
+
+            @media(max-width: 550px) {
+                margin-left: 15px;
+            }
         }
     }
 </style>

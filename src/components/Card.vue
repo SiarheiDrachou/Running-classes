@@ -62,6 +62,7 @@
         display: flex;
         align-items: center;
         margin-bottom: 75px;
+        padding-left: 15px;
 
         &__description {
             margin-left: 45px;

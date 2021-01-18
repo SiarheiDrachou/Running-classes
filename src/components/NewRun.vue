@@ -61,12 +61,18 @@
         margin-top: 118px;
         padding: 100px 88px 47px 88px;
 
+        @media(max-width: 550px) {
+            width: 307px;
+            padding: 64px 35px 37px 35px;
+        }
+
         &__input {
             width: 236px;
             height: 31px;
             border-radius: 7px;
             border: solid 1px #979797;
             margin-bottom: 25px;
+            padding-left: 15px;
         }
 
         &__label {
@@ -77,11 +83,17 @@
             width: 320px;
             padding: 14px 0;
             border-radius: 25.2px;
-            border: solid 2px #979797;
+            border: solid 2px white;
             font-size: 12.6px;
             font-weight: bold;
             margin: 0 auto;
             margin-top: 20px;
+            color: white;
+            background-color: transparent;
+
+            @media(max-width: 550px) {
+                width: 237px;
+            }
         }
 
         &__img {
@@ -92,14 +104,26 @@
 
         .ml-15 {
             margin-left: 15px;
+
+            @media(max-width: 550px) {
+                margin: 6px 0 20px 0;
+            }
         }
 
         .ml-37 {
             margin-left: 37px;
+
+            @media(max-width: 550px) {
+                margin: 6px 0 20px 0;
+            }
         }
 
         .ml-40 {
             margin-left: 40px;
+
+            @media(max-width: 550px) {
+                margin: 6px 0 20px 0;
+            }
         }
     }
 </style>

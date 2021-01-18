@@ -12,26 +12,31 @@ export default new Vuex.Store({
         currentPage: '',
         runKey: null,
         editComponent: false,
-        runs: [{
-                date: '20.12.2017',
+        startDate: null,
+        endDate: null,
+        sortRuns: null,
+        filterActive: false,
+        runs: [
+            {
+                date: '20.01.2021',
                 speed: 15,
                 distance: '10 km',
                 time: '60 min'
             },
             {
-                date: '20.12.2017',
+                date: '20.01.2021',
                 speed: 15,
                 distance: '10 km',
                 time: '60 min'
             },
             {
-                date: '20.12.2017',
+                date: '20.01.2021',
                 speed: 15,
                 distance: '10 km',
                 time: '60 min'
             },
             {
-                date: '20.12.2017',
+                date: '20.01.2021',
                 speed: 15,
                 distance: '10 km',
                 time: '60 min'
@@ -41,6 +46,7 @@ export default new Vuex.Store({
     mutations: {
         viewSearchComponent(state) {
             state.searchComponent = !state.searchComponent;
+            state.filterActive = !state.filterActive;
         },
         viewNewRunComponent(state) {
             state.newRunComponent = !state.newRunComponent;
@@ -66,6 +72,21 @@ export default new Vuex.Store({
         },
         closeEditComponent(state) {
             state.editComponent = false;
+        },
+        changeStartDate(state, start) {
+            state.startDate = start;
+        },
+        changeEndDate(state, end) {
+            state.endDate = end;
+        },
+        pushSortRuns(state, runs) {
+            state.sortRuns.push(runs);
+        },
+        changeSortRuns(state) {
+            state.sortRuns = state.runs;
+        },
+        clearSortRuns(state) {
+            state.sortRuns = [];
         }
     },
     actions: {
@@ -94,6 +115,42 @@ export default new Vuex.Store({
         changeRunComponent({commit}, run) {
             commit('changeRun', run);
             commit('closeEditComponent');
+        },
+        getStartDate({commit}, start) {
+            commit('changeStartDate', start);
+        },
+        getEndDate({commit}, end) {
+            commit('changeEndDate', end);
+        },
+        sortRuns({commit, state}) {
+            if(state.startDate && state.endDate) {
+                commit('clearSortRuns');
+                for(let run of state.runs) {
+                    if ( 
+                        (
+                            +run.date.split('.')[0] >= +state.startDate.split('.')[0] &&
+                            (
+                                +run.date.split('.')[1] >= +state.startDate.split('.')[1] || 
+                                +run.date.split('.')[2] < +state.startDate.split('.')[2]
+                            ) &&
+                            +run.date.split('.')[2] >= +state.startDate.split('.')[2]
+                        ) &&
+                        (
+                            (
+                                +run.date.split('.')[0] <= +state.endDate.split('.')[0] || 
+                                +run.date.split('.')[1] < +state.endDate.split('.')[1]
+                            ) &&
+                            +run.date.split('.')[1] <= +state.endDate.split('.')[1] &&
+                            +run.date.split('.')[2] <= +state.endDate.split('.')[2]
+                        )
+                    ) {
+                        commit('pushSortRuns', run);
+                    }
+                }
+            }
+            else {
+                commit('changeSortRuns');
+            }
         }
     },
     modules: {}
