@@ -1,0 +1,53 @@
+.change-run-info-form {
+    position: relative;
+    width: 503px;
+    height: 379px;
+    border-radius: 44px;
+    background-color: #7ed321;
+    margin: 0 auto;
+    margin-top: 118px;
+    padding: 47px 88px;
+
+    &__input {
+        width: 236px;
+        height: 31px;
+        border-radius: 7px;
+        border: solid 1px #979797;
+        margin-bottom: 25px;
+    }
+
+    &__label {
+        font-size: 16px;
+    }
+
+    &__button {
+        width: 320px;
+        padding: 14px 0;
+        border-radius: 25.2px;
+        border: solid 2px white;
+        font-size: 12.6px;
+        font-weight: bold;
+        margin: 0 auto;
+        margin-top: 20px;
+        color: white;
+        background-color: transparent;
+    }
+
+    &__img {
+        position: absolute;
+        top: 27px;
+        right: 27px;
+    }
+
+    .ml-15 {
+        margin-left: 15px;
+    }
+
+    .ml-37 {
+        margin-left: 37px;
+    }
+
+    .ml-30 {
+        margin-left: 30px;
+    }
+}

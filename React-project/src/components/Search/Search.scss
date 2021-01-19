@@ -1,0 +1,32 @@
+.search-form {
+    width: 100%;
+    padding: 15px 0;
+    background-color: #eaeaea;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__input {
+        border-radius: 11px;
+        border: solid 1px #979797;
+        margin-left: 15px;
+        width: 130px;
+        height: 31px;
+
+        @media(max-width: 550px) {
+            width: 90px;
+        }
+    }
+
+    &__label {
+        font-size: 13px;
+    }
+
+    .ml {
+        margin-left: 45px;
+
+        @media(max-width: 550px) {
+            margin-left: 15px;
+        }
+    }
+}
