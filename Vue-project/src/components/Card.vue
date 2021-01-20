@@ -27,7 +27,6 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex'
     import { mapActions } from 'vuex'
 
     export default {
@@ -40,18 +39,9 @@
                 this.getCurrentRunKey(this.id);
             },
             ...mapActions({
-                runKey: 'runKey',
-                getCurrentPage: 'getCurrentPage',
                 getCurrentRunKey: 'getCurrentRunKey'
             })
-        },
-        computed: {
-            ...mapState({
-                searchComponent: state => state.searchComponent,
-                newRunComponent: state => state.newRunComponent,
-                runs: state => state.runs
-            })
-        },
+        }
     }
 </script>
 

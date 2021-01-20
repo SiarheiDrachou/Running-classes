@@ -1,37 +1,54 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom';
 import './LetMeIn.scss'
+import {viewFullHeader, getCurrentPage} from '../redux/actions/runs'
+import bearDesctop from '../assets/img/bear-face.svg'
+import bearMobile from '../assets/img/bearFace.png'
 
-const LetMeIn = props => (
-    <main className="main">
-        <div className="main-login">
-            <img 
-                src="../assets/img/bear-face.svg" 
-                alt="bear-face img" 
-                className="main-login__img--desctop" 
-            />
+class LetMeIn extends Component {
+    state = {
+        
+    }
 
-            <img 
-                src="../assets/img/bearFace.png" 
-                alt="bear-face img" 
-                className="main-login__img--mobile" 
-            />
+    componentDidMount() {
+        this.props.viewFullHeader(true);
+        this.props.getCurrentPage('LetMeIn');
+    }
 
-            <NavLink className="main-login__button" to="/Jogs">Let me in</NavLink>
-        </div>
-    </main>
-)
+    render() {
+        return (
+            <section className="let-me-in-section">
+                <div className="let-me-in-section-login">
+                    <img 
+                        src={bearDesctop} 
+                        alt="bear-face img" 
+                        className="let-me-in-section-login__img--desctop" 
+                    />
+
+                    <img 
+                        src={bearMobile}
+                        alt="bear-face img" 
+                        className="let-me-in-section-login__img--mobile" 
+                    />
+
+                    <NavLink className="let-me-in-section-login__button" to="/Jogs">Let me in</NavLink>
+                </div>
+            </section>
+        )
+    }
+}
 
 function mapStateToProps(state) {
     return {
-        data: state.variables.data
+        starter: state.variables.starter
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        
+        viewFullHeader: view => dispatch(viewFullHeader(view)),
+        getCurrentPage: page => dispatch(getCurrentPage(page)),
     }
 }
 

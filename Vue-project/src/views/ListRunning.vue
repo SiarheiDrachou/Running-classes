@@ -13,7 +13,7 @@
                 :id="id"
             />
 
-            <hr />
+            <hr class="hr"/>
         </div>
 
         <ChangeRunInfo v-if="editComponent"/>
@@ -103,6 +103,14 @@
                 right: 20px;
                 bottom: 20px;
             }
+        }
+    }
+
+    .hr {
+        display: none;
+
+        @media(max-width: 550px) {
+            display: block;
         }
     }
 </style>

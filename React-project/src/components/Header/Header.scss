@@ -32,11 +32,6 @@
     .header-nav {
         width: 400px;
 
-        @media(max-width: 550px) {
-            width: 95%;
-            height: 95%;
-        }
-
         .header-nav__list,
         .header-nav__list-mobile{
             display: flex;

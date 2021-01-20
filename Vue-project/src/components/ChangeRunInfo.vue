@@ -43,7 +43,6 @@
         },
         methods: {
             ...mapActions({
-                getCurrentRunKey: 'getCurrentRunKey',
                 changeRunComponent: 'changeRunComponent',
                 closeEdit: 'closeEdit'
             }),

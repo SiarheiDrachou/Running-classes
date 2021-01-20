@@ -86,14 +86,16 @@
                 padding: 20px 34px;
                 border-radius: 36px;
                 border: solid 3px white;
+                color: white;
                 background-color: transparent;
                 font-size: 18px;
                 font-weight: bold;
-                color: rgb(233, 144, 249);
                 text-decoration: none;
 
                 @media(max-width: 550px) {
                     margin-top: 103px;
+                    
+                    color: rgb(233, 144, 249);
                     border: solid 3px rgb(233, 144, 249);
                 }
             }

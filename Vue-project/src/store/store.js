@@ -50,7 +50,6 @@ export default new Vuex.Store({
         },
         viewNewRunComponent(state) {
             state.newRunComponent = !state.newRunComponent;
-            console.log(state.newRunComponent);
         },
         viewHeader(state, starter) {
             state.starter = starter;

@@ -6,14 +6,14 @@
             <img src="../assets/img/logo.png" alt="" class="header__link__logo" v-else />
         </router-link>
         
-        <nav v-if="!starter && changeNav" class="header-nav">
-            <ul :class="{'header-nav__list': !changeNav, 'header-nav__list-mobile': changeNav}">
+        <nav v-if="!starter" :class="{'header-nav': !changeNav, 'header-nav--mobile': changeNav}">
+            <ul class="header-nav__list">
                 <li class="header-nav__list__item">
                     <router-link 
                         to="/Jogs" 
                         class="header-nav__list__item__link"
                         :class="{
-                            underline: currentPage == 'Info' && !changeNav, 
+                            'underline': currentPage == 'ListRunning' && !changeNav, 
                             'header-nav__list__item__link--green': currentPage == 'ListRunning' && changeNav
                         }"
                     >JOGS</router-link>
@@ -24,7 +24,7 @@
                         to="/Info" 
                         class="header-nav__list__item__link"
                         :class="{
-                            underline: currentPage == 'Info' && !changeNav, 
+                            'underline': currentPage == 'Info' && !changeNav, 
                             'header-nav__list__item__link--green': currentPage == 'Info' && changeNav
                         }"
                     >INFO</router-link>                        
@@ -34,20 +34,10 @@
                     <a 
                         class="header-nav__list__item__link"
                         :class="{
-                            underline: currentPage == 'Info' && !changeNav, 
+                            'underline': currentPage == 'Contact' && !changeNav, 
                             'header-nav__list__item__link--green': currentPage == 'Contact' && changeNav
                         }"
                     >CONTACT US</a>                        
-                </li>
-
-                <li class="header-nav__list__item" v-if="!changeNav">
-                    <img 
-                        src="../assets/img/filter-active.svg" 
-                        alt="" 
-                        v-if="!starter && !changeNav" 
-                        @click="viewSerch"
-                        class="header-nav__list__item__img-filter"
-                    >                
                 </li>
             </ul>
         </nav>
@@ -55,7 +45,7 @@
         <img 
             src="../assets/img/filter-active.svg" 
             alt="" 
-            v-if="!starter && !changeNav && filterActive" 
+            v-if="!starter && !changeNav && !filterActive" 
             @click="viewSerch"
             class="header__img-filter--active"
         >
@@ -63,7 +53,7 @@
         <img 
             src="../assets/img/filter.png" 
             alt="" 
-            v-if="!starter && !changeNav && !filterActive" 
+            v-if="!starter && !changeNav && filterActive" 
             @click="viewSerch"
             class="header__img-filter"
         >
@@ -91,7 +81,6 @@
     export default {
         data() {
             return {
-                page: null,
                 changeNav: false
             }
         },
@@ -108,8 +97,7 @@
         methods: {
             ...mapActions({
                 viewFullHeader: 'viewFullHeader',
-                viewSerch: 'viewSerch',
-                getCurrentPage: 'getCurrentPage'
+                viewSerch: 'viewSerch'
             }),
             changeClassNav() {
                 this.changeNav = !this.changeNav;
@@ -167,14 +155,77 @@
 
         .header-nav {
             width: 400px;
+            height: 50px;
+            display: block;
 
+            @media(max-width: 550px) {
+                display: none;
+            }
+
+            .header-nav__list{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 20px;
+
+                @media(max-width: 550px) {
+                    width: 100%;
+                    height: 100%;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+
+                .header-nav__list__item {
+                    list-style-type: none;
+                    font-size: 14px;
+                    font-weight: bold;
+                    color: white;
+
+                    @media(max-width: 550px) {
+                        color: black;
+                    }
+
+                    .header-nav__list__item__img-filter {
+
+                        @media(max-width: 550px) {
+                            position: absolute;
+                            top: 20px;
+                            right: 95px;
+                        }
+                    }
+
+                    .header-nav__list__item__link {
+                        color: white;
+                        text-decoration: none;
+                        position: relative;
+
+                        @media(max-width: 550px) {
+                            color: black;
+                            font-size: 25px;
+                        }
+                    }
+
+                    .header-nav__list__item__link--green {
+                        color: green;
+                    }
+                }
+
+                &__item:nth-child(2) {
+                    margin: 25px 0;
+                }
+            }
+        }
+
+        .header-nav--mobile {
+            display: none;
+            
             @media(max-width: 550px) {
                 width: 95%;
                 height: 95%;
+                display: block;
             }
 
-            .header-nav__list,
-            .header-nav__list-mobile{
+            .header-nav__list{
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
