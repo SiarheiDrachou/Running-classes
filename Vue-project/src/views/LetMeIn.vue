@@ -4,15 +4,13 @@
             <img 
                 src="../assets/img/bear-face.svg" 
                 alt="bear-face img" 
-                class="main-login__img" 
-                v-if="innerWidth > 550" 
+                class="main-login__img--desctop" 
             />
 
             <img 
                 src="../assets/img/bearFace.png" 
                 alt="bear-face img" 
-                class="main-login__img" 
-                v-else 
+                class="main-login__img--mobile" 
             />
 
             <router-link to="/Jogs" class="main-login__button">Let me in</router-link>
@@ -74,10 +72,27 @@
             }
 
             &__img {
-                margin-top: 77px;
 
                 @media(max-width: 550px) {
                     width: 160px;
+                }
+
+                &--desctop {
+                    display: block;
+                    margin-top: 77px;
+
+                    @media(max-width: 550px) {
+                        display: none;
+                    }
+                }
+
+                &--mobile {
+                    display: none;
+                    margin-top: 77px;
+
+                    @media(max-width: 550px) {
+                        display: block;
+                    }
                 }
             }
 

@@ -4,7 +4,7 @@
 
         <div 
             class="main-container" 
-            v-show="newRunComponent && !editComponent" 
+            v-show="!newRunComponent && !editComponent" 
             v-for="(run, id) in currentRuns"
             :key="id" 
         >
@@ -18,11 +18,11 @@
 
         <ChangeRunInfo v-if="editComponent"/>
 
-        <NewRun  v-if="!newRunComponent" />
+        <NewRun  v-if="newRunComponent" />
 
         <EmptyRunInfo v-if="!currentRuns.length" />
 
-        <img src="../assets/img/add.svg" alt="" class="main__img" @click="viewNewRun" v-else />
+        <img src="../assets/img/add.svg" alt="" class="main__img" @click="viewNewRun" v-if="currentRuns.length && !newRunComponent && !editComponent" />
     </main>
 </template>
 
@@ -36,11 +36,6 @@
     import EmptyRunInfo from '../components/EmptyRunInfo.vue'
 
     export default {
-        data() {
-            return {
-                currentRuns: []
-            }
-        },
         components: {
             Search,
             Card,
@@ -56,32 +51,20 @@
                 editComponent: state => state.editComponent,
                 startDate: state => state.startDate,
                 endDate: state => state.endDate,
-                sortRuns: state => state.sortRuns
+                currentRuns: state => state.currentRuns
             })
         },
         methods: {
             ...mapActions({
                 viewNewRun: 'viewNewRun',
-                getCurrentPage: 'getCurrentPage'
-            }),
-            getCurrentRuns(sortRuns) {
-                if(this.startDate && this.endDate) {
-                    this.currentRuns = sortRuns;
-                }
-                else {
-                    this.currentRuns = this.runs;
-                }
-            }
+                getCurrentPage: 'getCurrentPage',
+                getJog: 'getJog'
+            })
         },
-        watch: {
-            sortRuns: function(sortRuns) {
-                this.getCurrentRuns(sortRuns);
-            }
-        },
-        mounted() {
+        created() {
             this.getCurrentPage('ListRunning');
-
-            this.getCurrentRuns(this.sortRuns);
+            
+            this.getJog();
         }
     }
 </script>

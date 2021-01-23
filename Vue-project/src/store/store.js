@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import axios from 'axios';
+import axios from 'axios';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
         searchComponent: false,
-        newRunComponent: true,
+        newRunComponent: false,
         starter: true,
         currentPage: '',
         runKey: null,
@@ -16,32 +16,11 @@ export default new Vuex.Store({
         endDate: null,
         sortRuns: null,
         filterActive: false,
+        currentRuns: [],
         runs: [
-            {
-                date: '20.01.2021',
-                speed: 15,
-                distance: '10 km',
-                time: '60 min'
-            },
-            {
-                date: '20.01.2021',
-                speed: 15,
-                distance: '10 km',
-                time: '60 min'
-            },
-            {
-                date: '20.01.2021',
-                speed: 15,
-                distance: '10 km',
-                time: '60 min'
-            },
-            {
-                date: '20.01.2021',
-                speed: 15,
-                distance: '10 km',
-                time: '60 min'
-            }
-        ]
+        ],
+        changeNav: false,
+        accessToken: ''
     },
     mutations: {
         viewSearchComponent(state) {
@@ -55,12 +34,15 @@ export default new Vuex.Store({
             state.starter = starter;
         },
         addNewRuns(state, run) {
-            state.runs.push(run);
+            state.runs.unshift(run);
+            state.currentRuns = state.runs;
         },
         changeRun(state, run) {
             state.runs[state.runKey].speed = run.speed;
             state.runs[state.runKey].distance = run.distance;
             state.runs[state.runKey].time = run.time;
+
+            state.currentRuns = state.runs;
         },
         changeCurrentPage(state, page) {
             state.currentPage = page;
@@ -80,17 +62,38 @@ export default new Vuex.Store({
         },
         pushSortRuns(state, runs) {
             state.sortRuns.push(runs);
+
+            state.currentRuns = state.sortRuns;
         },
         changeSortRuns(state) {
             state.sortRuns = state.runs;
+
+            state.currentRuns = state.sortRuns;
         },
         clearSortRuns(state) {
             state.sortRuns = [];
+
+            state.currentRuns = state.sortRuns;
+        },
+        setToken(state, token) {
+            state.accessToken = token;
+
+            localStorage.setItem('token', token);
+        },
+        setJog(state, runs) {
+            state.runs = runs;
+
+            state.currentRuns = runs;
+        },
+        setChangeNav(state) {
+            state.changeNav = !state.changeNav;
         }
     },
     actions: {
         viewSerch({commit}) {
             commit('viewSearchComponent');
+            commit('changeStartDate', null);
+            commit('changeEndDate', null);
         },
         viewNewRun({commit}) {
             commit('viewNewRunComponent');
@@ -99,8 +102,15 @@ export default new Vuex.Store({
             commit('viewHeader', starter);
         },
         addRuns({commit}, run) {
-            commit('addNewRuns', run);
-            commit('viewNewRunComponent');
+            axios({
+                method: 'post',
+                url: `https://jogtracker.herokuapp.com/api/v1/data/jog?date=${run.date}&time=${run.time}&distance=${run.distance}&access_token=${localStorage.getItem('token')}`
+            }).then(function (req) {
+                commit('addNewRuns', req.data.response);
+                commit('viewNewRunComponent');
+            }).catch(function (e) {
+                console.log(e);
+            });
         },
         getCurrentPage({commit}, page) {
             commit('changeCurrentPage', page);
@@ -112,8 +122,16 @@ export default new Vuex.Store({
             commit('closeEditComponent');
         },
         changeRunComponent({commit}, run) {
-            commit('changeRun', run);
-            commit('closeEditComponent');
+            axios({
+                method: 'put',
+                url: `https://jogtracker.herokuapp.com/api/v1/data/jog?date=${run.speed}&time=${run.time}&distance=${run.distance}&access_token=${localStorage.getItem('token')}&jog_id=${run.id}&user_id=${run.user_id}`
+            }).then(function (req) {
+                commit('changeRun', req.data.response);
+                commit('closeEditComponent');
+            }).catch(function (e) {
+                console.log(e);
+                commit('closeEditComponent');
+            });
         },
         getStartDate({commit}, start) {
             commit('changeStartDate', start);
@@ -124,32 +142,52 @@ export default new Vuex.Store({
         sortRuns({commit, state}) {
             if(state.startDate && state.endDate) {
                 commit('clearSortRuns');
+
                 for(let run of state.runs) {
-                    if ( 
-                        (
-                            +run.date.split('.')[0] >= +state.startDate.split('.')[0] &&
-                            (
-                                +run.date.split('.')[1] >= +state.startDate.split('.')[1] || 
-                                +run.date.split('.')[2] < +state.startDate.split('.')[2]
-                            ) &&
-                            +run.date.split('.')[2] >= +state.startDate.split('.')[2]
-                        ) &&
-                        (
-                            (
-                                +run.date.split('.')[0] <= +state.endDate.split('.')[0] || 
-                                +run.date.split('.')[1] < +state.endDate.split('.')[1]
-                            ) &&
-                            +run.date.split('.')[1] <= +state.endDate.split('.')[1] &&
-                            +run.date.split('.')[2] <= +state.endDate.split('.')[2]
-                        )
-                    ) {
-                        commit('pushSortRuns', run);
+                    if(typeof(run.date) == 'string') {
+                        if ( 
+                            new Date(run.date).getTime() >= state.startDate &&
+                            new Date(run.date).getTime() <= state.endDate
+                        ) {
+                            commit('pushSortRuns', run);
+                        }
+                    } 
+                    else {
+                        if ( 
+                            run.date >= state.startDate &&
+                            run.date <= state.endDate
+                        ) {
+                            commit('pushSortRuns', run);
+                        }
                     }
                 }
             }
             else {
                 commit('changeSortRuns');
             }
+        },
+        getToken({commit}) {
+            axios({
+                method: 'post',
+                url: `https://jogtracker.herokuapp.com/api/v1/auth/uuidLogin/?uuid=hello`
+            }).then(function (req) {
+                commit('setToken', req.data.response.access_token);
+            }).catch(function (e) {
+                console.log(e);
+            });
+        },
+        getJog({commit}) {
+            axios({
+                method: 'get',
+                url: `https://jogtracker.herokuapp.com/api/v1/data/sync/?access_token=${localStorage.getItem('token')}`
+            }).then(function (req) {
+                commit('setJog', req.data.response.jogs);
+            }).catch(function (e) {
+                console.log(e);
+            });
+        },
+        getChangeNav({commit}) {
+            commit('setChangeNav');
         }
     },
     modules: {}

@@ -39,9 +39,11 @@
                 let run = {};
 
                 run = {
-                    time: this.time + ' min',
-                    date: this.date.split('-').reverse().join('.'),
-                    distance: this.distance + ' km'
+                    id: new Date().getTime(),
+                    time: this.time,
+                    date: this.date,
+                    distance: this.distance,
+                    user_id: "3"
                 }
 
                 this.addRuns(run);

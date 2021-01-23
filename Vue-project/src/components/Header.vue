@@ -6,7 +6,7 @@
             <img src="../assets/img/logo.png" alt="" class="header__link__logo" v-else />
         </router-link>
         
-        <nav v-if="!starter" :class="{'header-nav': !changeNav, 'header-nav--mobile': changeNav}">
+        <nav :class="{'header-nav': !changeNav, 'header-nav--mobile': changeNav, 'header-nav--opacity': starter && !changeNav}">
             <ul class="header-nav__list">
                 <li class="header-nav__list__item">
                     <router-link 
@@ -45,7 +45,7 @@
         <img 
             src="../assets/img/filter-active.svg" 
             alt="" 
-            v-if="!starter && !changeNav && !filterActive" 
+            v-if="!starter && !changeNav && filterActive && currentPage == 'ListRunning'" 
             @click="viewSerch"
             class="header__img-filter--active"
         >
@@ -53,7 +53,7 @@
         <img 
             src="../assets/img/filter.png" 
             alt="" 
-            v-if="!starter && !changeNav && filterActive" 
+            v-if="!starter && !changeNav && !filterActive && currentPage == 'ListRunning'" 
             @click="viewSerch"
             class="header__img-filter"
         >
@@ -62,14 +62,16 @@
             src="../assets/img/menu.png" 
             alt="" 
             class="header__img" 
-            @click="changeClassNav" v-if="!changeNav" 
+            @click="changeClassNav" 
+            v-if="!changeNav" 
         />
 
         <img 
             src="../assets/img/close.svg" 
             alt="" 
             class="header__img" 
-            @click="changeClassNav" v-else 
+            @click="changeClassNav" 
+            v-else 
         />
     </header>
 </template>
@@ -79,35 +81,41 @@
     import { mapState } from 'vuex'
 
     export default {
-        data() {
-            return {
-                changeNav: false
-            }
-        },
         watch: {
             $route(to) {
                 if(to.path == '/') {
                     this.viewFullHeader(true);
                 }
-                else {
+                else if (to.path == '/Jogs'){
                     this.viewFullHeader(false);
+                }
+
+                if(this.changeNav) {
+                    this.getChangeNav();
+                }
+
+                if(!this.accessToken) {
+                    this.$router.push('/');
                 }
             }
         },
         methods: {
             ...mapActions({
                 viewFullHeader: 'viewFullHeader',
-                viewSerch: 'viewSerch'
+                viewSerch: 'viewSerch',
+                getChangeNav: 'getChangeNav'
             }),
             changeClassNav() {
-                this.changeNav = !this.changeNav;
+                this.getChangeNav();
             }
         },
         computed: {
             ...mapState({
                 starter: state => state.starter,
                 currentPage: state => state.currentPage,
-                filterActive: state => state.filterActive
+                filterActive: state => state.filterActive,
+                accessToken: state => state.accessToken,
+                changeNav: state => state.changeNav
             })
         },
         mounted() {
@@ -143,9 +151,6 @@
         }
 
         &__link {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
 
             &__logo {
                 width: 100px;
@@ -154,7 +159,7 @@
         }
 
         .header-nav {
-            width: 400px;
+            width: 95%;
             height: 50px;
             display: block;
 
@@ -164,12 +169,12 @@
 
             .header-nav__list{
                 display: flex;
-                justify-content: space-between;
+                justify-content: space-around;
                 align-items: center;
                 height: 20px;
+                width: 100%;
 
                 @media(max-width: 550px) {
-                    width: 100%;
                     height: 100%;
                     flex-direction: column;
                     justify-content: center;
@@ -276,6 +281,10 @@
                     margin: 25px 0;
                 }
             }
+        }
+
+        .header-nav--opacity {
+            opacity: 0;
         }
 
         &__img {

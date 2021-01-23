@@ -1,17 +1,17 @@
 <template>
     <form class="form">
         <label for="Speed" class="form__label ml">Speed</label>
-        <input id="Speed" type="number" class="form__input ml-30" v-model="speed" />
+        <input id="Speed" type="number" class="form__input ml-30" :placeholder="runs[runKey].speed" v-model="speed" />
 
         <br />
 
         <label for="Distance" class="form__label">Distance</label>
-        <input id="Distance" type="number" class="form__input ml-15" v-model="distance" />
+        <input id="Distance" type="number" class="form__input ml-15" :placeholder="runs[runKey].distance" v-model="distance" />
 
         <br />
 
         <label for="Time" class="form__label ml">Time</label>
-        <input id="Time" type="number" class="form__input ml-37" v-model="time" />
+        <input id="Time" type="number" class="form__input ml-37" :placeholder="runs[runKey].time" v-model="time" />
 
         <br />
 
@@ -49,16 +49,16 @@
             changeInfo() {
                 let run = this.runs[this.runKey];
 
-                run.time = this.time + ' min';
+                run.time = this.time;
                 run.speed = this.speed;
-                run.distance = this.distance + ' km';
+                run.distance = this.distance;
 
                 this.changeRunComponent(run);
             },
             cancel() {
                 this.closeEdit();
             }
-        },
+        }
     }
 </script>
 

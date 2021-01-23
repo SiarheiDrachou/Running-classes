@@ -27,13 +27,13 @@
         },
         watch: {
             start: function(start) {
-                let startDate = start.split('-').reverse().join('.');
+                let startDate = new Date(start).getTime();
 
                 this.getStartDate(startDate);
                 this.sortRuns();
             },
             end: function(end) {
-                let endDate = end.split('-').reverse().join('.');
+                let endDate = new Date(end).getTime();
 
                 this.getEndDate(endDate);
                 this.sortRuns();

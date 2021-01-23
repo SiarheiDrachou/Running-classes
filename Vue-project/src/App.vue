@@ -8,21 +8,19 @@
 
 <script>
     import Header from './components/Header'
-    import axios from 'axios'
+    import { mapActions } from 'vuex'
 
     export default {
         components: {
             Header
         },
         mounted() {
-            axios({
-                method: 'post',
-                url: `https://jogtracker.herokuapp.com/api/v1/test/echo`
-            }).then(function (req) {
-                console.log(req);
-            }).catch(function (e) {
-                console.log(e);
-            });
+            this.getToken();
+        },
+        methods: {
+            ...mapActions({
+                getToken: 'getToken'
+            })
         }
     }
 </script>
