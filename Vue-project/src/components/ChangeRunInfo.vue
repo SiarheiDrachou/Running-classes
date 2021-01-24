@@ -13,8 +13,6 @@
         <label for="Time" class="form__label ml">Time</label>
         <input id="Time" type="number" class="form__input ml-37" :placeholder="runs[runKey].time" v-model="time" />
 
-        <br />
-
         <button class="form__button" @click.prevent="changeInfo">Save</button>
 
         <br />
@@ -73,6 +71,13 @@
         margin-top: 118px;
         padding: 47px 88px;
 
+        @media(max-width: 550px) {
+            width: 307px;
+            padding: 47px 35px;
+            margin-top: 82px;
+            height: 420px;
+        }
+
         &__input {
             width: 236px;
             height: 31px;
@@ -93,9 +98,13 @@
             font-size: 12.6px;
             font-weight: bold;
             margin: 0 auto;
-            margin-top: 20px;
             color: white;
             background-color: transparent;
+            margin-bottom: 10px;
+
+            @media(max-width: 550px) {
+                width: 237px;
+            }
         }
 
         &__img {
@@ -106,14 +115,26 @@
 
         .ml-15 {
             margin-left: 15px;
+
+            @media(max-width: 550px) {
+                margin: 0 0 25px 0;
+            }
         }
 
         .ml-37 {
             margin-left: 37px;
+
+            @media(max-width: 550px) {
+                margin: 0 0 25px 0;
+            }
         }
 
         .ml-30 {
             margin-left: 30px;
+
+            @media(max-width: 550px) {
+                margin: 0 0 25px 0;
+            }
         }
     }
 </style>

@@ -43,7 +43,7 @@
             this.getCurrentPage('LetMeIn');
 
             window.onresize = () => {
-                this.innerWidth = window.innerWidth;
+                this.mainHeightResult();
             };
         }
     }

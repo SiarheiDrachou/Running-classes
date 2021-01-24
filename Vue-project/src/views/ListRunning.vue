@@ -20,7 +20,7 @@
 
         <NewRun  v-if="newRunComponent" />
 
-        <EmptyRunInfo v-if="!currentRuns.length" />
+        <EmptyRunInfo v-if="!currentRuns.length && !newRunComponent && !editComponent" />
 
         <img src="../assets/img/add.svg" alt="" class="main__img" @click="viewNewRun" v-if="currentRuns.length && !newRunComponent && !editComponent" />
     </main>

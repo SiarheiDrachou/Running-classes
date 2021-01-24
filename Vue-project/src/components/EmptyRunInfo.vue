@@ -24,7 +24,6 @@
     .empty {
         width: 100%;
         height: 100%;
-        padding-top: 145px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -32,14 +31,19 @@
 
         &__img {
             width: 85px;
+            margin-top: 80px;
+            margin-bottom: 47px;
+
+            @media(max-width: 550px) {
+                margin-top: 140px;
+                margin-bottom: 30px;
+            }
         }
 
         &__text {
             font-size: 24px;
             line-height: 29px;
             color: gray;
-            margin-bottom: 100px;
-            margin-top: 30px;
         }
 
         &__button {
@@ -49,6 +53,7 @@
             border-radius: 30px;
             border: solid 2px  rgb(233, 144, 249);
             background-color: transparent;
+            margin-top: 145px;
         }
     }
 </style>
