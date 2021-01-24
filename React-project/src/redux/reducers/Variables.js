@@ -1,11 +1,14 @@
 import {
     viewSearch,
-    newRunInfo,
+    filter,
     closeEdit,
     viewNew,
     addRun,
     changeStarter,
-    locationPage
+    locationPage,
+    key,
+    pushRuns,
+    nav
 } from '../actions/actionTypes'
 
 const initialState = {
@@ -21,36 +24,10 @@ const initialState = {
     filterActive: false,
     changeNav: false,
     currentRuns: [],
-    runs: [
-        {
-            date: '20.01.2021',
-            speed: 15,
-            distance: '10 km',
-            time: '60 min'
-        },
-        {
-            date: '20.01.2021',
-            speed: 15,
-            distance: '10 km',
-            time: '60 min'
-        },
-        {
-            date: '20.01.2021',
-            speed: 15,
-            distance: '10 km',
-            time: '60 min'
-        },
-        {
-            date: '20.01.2021',
-            speed: 15,
-            distance: '10 km',
-            time: '60 min'
-        }
-    ]
+    runs: []
 }
 
 export default function DataBigReducer(state = initialState, action) {
-    console.log(action);
     switch(action.type) {
         case viewSearch:
             return {
@@ -66,7 +43,46 @@ export default function DataBigReducer(state = initialState, action) {
         case locationPage:
             return {
                 ...state,
-                currentPage: action.currentPage
+                currentPage: action.page
+            }
+        case viewNew:
+            return {
+                ...state,
+                newRunComponent: action.newRunComponent
+            }
+        case addRun:
+            return {
+                ...state,
+                runs: action.runs,
+                currentRuns: action.runs
+            }
+        case key:
+            return {
+                ...state,
+                runKey: action.runKey,
+                editComponent: action.editComponent
+            }
+        case closeEdit:
+            return {
+                ...state,
+                editComponent: action.closed
+            }
+        case filter:
+            return {
+                ...state,
+                startDate: action.start,
+                endDate: action.end
+            }
+        case pushRuns:
+            return {
+                ...state,
+                sortRuns: action.sortRuns,
+                currentRuns: action.sortRuns
+            }
+        case nav:
+            return {
+                ...state,
+                changeNav: action.changeNav
             }
         default:
             return state

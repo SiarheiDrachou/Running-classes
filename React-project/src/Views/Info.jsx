@@ -1,18 +1,28 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux'
-import {getCurrentPage} from '../redux/actions/runs'
+import {Redirect} from 'react-router-dom'
+import {getCurrentPage, viewFullHeader, changeClassNav} from '../redux/actions/runs'
 import './Info.scss'
 
 class Info extends Component {
-    state = {
-        
-    }
-
     componentDidMount() {
         this.props.getCurrentPage('Info');
+        this.props.viewFullHeader(false);
+    
+        if(this.props.changeNav) {
+            this.props.changeClassNav();
+        }
+
+        if(!localStorage.getItem('token')) {
+            this.props.history.push('/');
+        }
     }
 
     render() {
+        if(!localStorage.getItem('token')) {
+            return <Redirect to={'/'} />
+        }
+
         return (
             <article className="article">
                 <h1 className="article__header">INFO</h1>
@@ -44,16 +54,16 @@ class Info extends Component {
 
 function mapStateToProps(state) {
     return {
-        searchComponent: state.variables.searchComponent,
-        editComponent: state.variables.editComponent,
-        newRunComponent: state.variables.newRunComponent,
-        currentRuns: state.variables.currentRuns,
+        runs: state.variables.runs,
+        changeNav: state.variables.changeNav
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         getCurrentPage: page => dispatch(getCurrentPage(page)),
+        viewFullHeader: view => dispatch(viewFullHeader(view)),
+        changeClassNav: () => dispatch(changeClassNav())
     }
 }
 

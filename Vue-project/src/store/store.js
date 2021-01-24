@@ -104,7 +104,7 @@ export default new Vuex.Store({
         addRuns({commit}, run) {
             axios({
                 method: 'post',
-                url: `https://jogtracker.herokuapp.com/api/v1/data/jog?date=${run.date}&time=${run.time}&distance=${run.distance}&access_token=${localStorage.getItem('token')}`
+                url: `https://jogtracker.herokuapp.com/api/v1/data/jog/?date=${run.date}&time=${run.time}&distance=${run.distance}&access_token=${localStorage.getItem('token')}`
             }).then(function (req) {
                 commit('addNewRuns', req.data.response);
                 commit('viewNewRunComponent');
@@ -124,7 +124,7 @@ export default new Vuex.Store({
         changeRunComponent({commit}, run) {
             axios({
                 method: 'put',
-                url: `https://jogtracker.herokuapp.com/api/v1/data/jog?date=${run.speed}&time=${run.time}&distance=${run.distance}&access_token=${localStorage.getItem('token')}&jog_id=${run.id}&user_id=${run.user_id}`
+                url: `https://jogtracker.herokuapp.com/api/v1/data/jog/?date=${run.date}&time=${run.time}&distance=${run.distance}&access_token=${localStorage.getItem('token')}&jog_id=${run.id}&user_id=${run.user_id}`
             }).then(function (req) {
                 commit('changeRun', req.data.response);
                 commit('closeEditComponent');

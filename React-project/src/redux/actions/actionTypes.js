@@ -5,3 +5,7 @@ export const viewNew = "viewNew";
 export const addRun = "addRun";
 export const changeStarter = "changeStarter";
 export const locationPage = "locationPage";
+export const key = "key";
+export const filter = "filter";
+export const pushRuns = "pushRuns";
+export const nav = "nav";

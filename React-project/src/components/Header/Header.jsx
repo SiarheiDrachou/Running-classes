@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import {NavLink} from 'react-router-dom'
-import {viewSerch} from '../../redux/actions/runs';
+import {viewSerch, changeClassNav} from '../../redux/actions/runs';
 import './Header.scss';
 import logoDesctop from '../../assets/img/logo.svg';
 import logoMobile from '../../assets/img/logo.png';
@@ -11,121 +11,92 @@ import menu from '../../assets/img/menu.png';
 import close from '../../assets/img/close.svg';
 
 class Header extends Component {
-    state = {
-        page: null,
-        changeNav: false
-    }
-
-    changeClassNav = () =>{
-        this.setState({
-            changeNav: !this.state.changeNav
-        })
-    }
-
     render() {
-        console.log(this.state.changeNav);
         return (
-            <header className={this.state.changeNav ? 'header header--white': 'header'}>
+            <header className={this.props.changeNav ? 'header header--white': 'header'}>
                 <NavLink to="/">
                     {
-                        !this.state.changeNav ?
+                        !this.props.changeNav ?
                             <img src={logoDesctop} alt="" className="header__link__logo" />
                         :
                             <img src={logoMobile} alt="" className="header__link__logo" />
                     }
                 </NavLink>
 
-                {
-                    !this.props.starter && !this.state.changeNav  ? 
-                        <nav 
-                            className={
-                                this.state.changeNav ? 'header-nav':'header-nav--mobile'
-                            }
-                        >
-                            <ul className={
-                                    !this.state.changeNav ? 'header-nav__list':'header-nav__list-mobile'
+                <nav 
+                    className={
+                        (!this.props.changeNav ? 'header-nav' : 'header-nav--mobile') +
+                        (this.props.starter && !this.props.changeNav ? ' header-nav--opacity': '')
+                    }
+                >
+                    <ul className="header-nav__list">
+                        <li className="header-nav__list__item">
+                            <NavLink 
+                                to="/Jogs"
+                                className={
+                                    (this.props.currentPage === 'Jogs' && this.props.changeNav ? 'header-nav__list__item__link--green': null) +
+                                    ' header-nav__list__item__link'
                                 }
-                            >
-                                <li className="header-nav__list__item">
-                                    <NavLink 
-                                        to="/Jogs"
-                                        className={
-                                            this.props.currentPage == 'Jogs' && !this.state.changeNav ? null: 'underline', 
-                                            this.props.currentPage == 'Jogs' && this.state.changeNav ? 'header-nav__list__item__link--green': null,
-                                            true ? 'header-nav__list__item__link' : null
-                                        }
-                                    >Jogs</NavLink> 
-                                </li>
-                                
-                                <li className="header-nav__list__item">
-                                    <NavLink 
-                                        to="/Info"
-                                        className={
-                                            this.props.currentPage == 'Info' && !this.state.changeNav ? 'underline': null, 
-                                            this.props.currentPage == 'Info' && this.state.changeNav ? 'header-nav__list__item__link--green': null,
-                                            true ? 'header-nav__list__item__link' : null
-                                        }
-                                    >INFO</NavLink> 
-                                </li>
-                                
-                                <li className="header-nav__list__item">
-                                    <a 
-                                        className={
-                                            this.props.currentPage == 'Contact' && !this.state.changeNav ? 'underline': null, 
-                                            this.props.currentPage == 'Contact' && this.state.changeNav ? 'header-nav__list__item__link--green': null,
-                                            true ? 'header-nav__list__item__link' : null
-                                        }
-                                    >CONTACT US</a>
-                                </li>
-
-                                {
-                                    !this.props.starter && !this.state.changeNav ?
-                                        <li className="header-nav__list__item">
-                                            <img 
-                                                src="../assets/img/filter-active.svg" 
-                                                alt=""  
-                                                onClick={this.props.viewSerch}
-                                                className="header-nav__list__item__img-filter"
-                                            />                
-                                        </li>
-                                    : null
+                            >Jogs</NavLink> 
+                        </li>
+                        
+                        <li className="header-nav__list__item">
+                            <NavLink 
+                                to="/Info"
+                                className={
+                                    (this.props.currentPage === 'Jogs' && this.props.changeNav ? 'header-nav__list__item__link--green': null) +
+                                    ' header-nav__list__item__link'
                                 }
-                            </ul>
-                        </nav>
-                    : null
-                }
+                            >INFO</NavLink> 
+                        </li>
+                        
+                        <li className="header-nav__list__item">
+                            <a 
+                                className={
+                                    (this.props.currentPage === 'Jogs' && this.props.changeNav ? 'header-nav__list__item__link--green': null) +
+                                    ' header-nav__list__item__link'
+                                }
+                            >CONTACT US</a>
+                        </li>
+                    </ul>
+                </nav>
                 
                 {
-                    !this.props.starter && !this.state.changeNav && this.props.filterActive ?
+                    !this.props.starter && !this.props.changeNav && this.props.filterActive && this.props.currentPage === 'Jogs' ?
                         <img 
                             src={filterActive}
                             alt="" 
                             onClick={this.props.viewSerch}
                             className="header__img-filter--active"
                         />
-                    :
+                    : null
+                }
+
+                {
+                    !this.props.starter && !this.props.changeNav && !this.props.filterActive && this.props.currentPage === 'Jogs' ?
                         <img 
                             src={filter} 
                             alt="" 
                             onClick={this.props.viewSerch}
                             className="header__img-filter"
                         />
+                    : null
                 }
                 
                 {
-                    !this.state.changeNav ?
+                    !this.props.changeNav ?
                         <img 
                             src={menu}
                             alt="" 
                             className="header__img" 
-                            onClick={this.changeClassNav}
+                            onClick={this.props.changeClassNav}
                         />
                     : 
                         <img 
                             src={close} 
                             alt="" 
                             className="header__img" 
-                            onClick={this.changeClassNav}
+                            onClick={this.props.changeClassNav}
                         />
                 }
             </header>
@@ -138,13 +109,15 @@ function mapStateToprops(state) {
         searchComponent: state.variables.searchComponent,
         filterActive: state.variables.filterActive,
         starter: state.variables.starter,
-        currentPage: state.variables.currentPage
+        currentPage: state.variables.currentPage,
+        changeNav: state.variables.changeNav
     }
 }
 
 function mapDispatchToprops(dispatch) {
     return {
-        viewSerch: () => dispatch(viewSerch())
+        viewSerch: () => dispatch(viewSerch()),
+        changeClassNav: () => dispatch(changeClassNav())
     }
 }
 

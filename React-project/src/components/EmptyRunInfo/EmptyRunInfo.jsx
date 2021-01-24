@@ -1,6 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux'
-import {viewNewRun} from '../../redux/actions/runs';
 import './EmptyRunInfo.scss'
 import sadRoundedSquareEmoticon from '../../assets/img/sadRoundedSquareEmoticon.png'
 
@@ -14,16 +12,4 @@ const EmptyRunInfo = props => (
     </div>
 )
 
-function mapStateToProps(state) {
-    return {
-        data: state.variables.data
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        viewNewRun: () => dispatch(viewNewRun())
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(EmptyRunInfo)
+export default EmptyRunInfo

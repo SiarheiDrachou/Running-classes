@@ -5,8 +5,13 @@ import {
     viewNew,
     addRun,
     changeStarter,
-    locationPage
+    locationPage, 
+    key,
+    filter,
+    pushRuns,
+    nav
 } from './actionTypes'
+import axios from 'axios'
 
 export function viewSerch() {
     
@@ -21,9 +26,7 @@ export function viewSerch() {
 }
 
 export function getCurrentRunKey(runKey) {
-    return (dispatch, getState) => {
-        const state = getState();
-
+    return (dispatch) => {
         dispatch(changeRunKey(
             runKey,
             true
@@ -31,12 +34,14 @@ export function getCurrentRunKey(runKey) {
     }
 }
 
-export function changeRunComponent(run) {
+export function changeRunComponent(runs) {
     return (dispatch, getState) => {
         const state = getState();
 
         dispatch(
-            changeRun(changeInfo(state.variables.runs, state.variables.runKey)),
+            changeRun(runs)
+        );
+        dispatch(
             closeEditComponent(!state.variables.editComponent)
         );
     }
@@ -62,21 +67,76 @@ export function viewNewRun() {
     }
 }
 
-export function addRuns(run) {
+export function addRuns(runs) {
+    return (dispatch, getState) => {
+        const state = getState();
+        console.log(runs);
+        axios({
+            method: 'post',
+            url: `https://jogtracker.herokuapp.com/api/v1/data/jog/?date=${runs.date}&time=${runs.time}&distance=${runs.distance}&access_token=${localStorage.getItem('token')}`
+        }).then(function (req) {
+            dispatch(
+                addNewRuns(req.data.response)
+            );
+    
+            dispatch(
+                viewNewRunComponent(!state.variables.newRunComponent)
+            );
+    
+            dispatch(
+                pushSortRuns(req.data.response)
+            );
+        }).catch(function (e) {
+            console.log(e);
+
+            dispatch(
+                viewNewRunComponent(!state.variables.newRunComponent)
+            );
+        });
+    }
+}
+
+export function getRuns() {
+    return (dispatch) => {        
+        axios({
+            method: 'get',
+            url: `https://jogtracker.herokuapp.com/api/v1/data/sync/?access_token=${localStorage.getItem('token')}`
+        }).then(function (req) {
+            dispatch(
+                addNewRuns(req.data.response.jogs)
+            );
+        }).catch(function (e) {
+            console.log(e);
+        });
+    }
+}
+
+export function changeRuns(runs) {
     return (dispatch, getState) => {
         const state = getState();
 
-        dispatch(
-            addNewRuns(getInfo(state.variables.runs)),
-            viewNewRunComponent(!state.variables.newRunComponent)
-        );
+        axios({
+            method: 'put',
+            url: `https://jogtracker.herokuapp.com/api/v1/data/jog/?date=${runs.date}&time=${runs.time}&distance=${runs.distance}&access_token=${localStorage.getItem('token')}&jog_id=${runs.id}&user_id=${runs.user_id}`
+        }).then(function (req) {
+            dispatch(
+                addNewRuns(req.data.response)
+            );
+    
+            dispatch(
+                closeEditComponent(!state.variables.editComponent)
+            );
+        }).catch(function (e) {
+            console.log(e);
+            dispatch(
+                closeEditComponent(!state.variables.editComponent)
+            );
+        });
     }
 }
 
 export function viewFullHeader(view) {
-    return (dispatch, getState) => {
-        const state = getState();
-
+    return (dispatch) => {
         dispatch(
             viewHeader(view)
         );
@@ -84,49 +144,103 @@ export function viewFullHeader(view) {
 }
 
 export function getCurrentPage(page) {
-    return (dispatch, getState) => {
-        const state = getState();
-
+    return (dispatch) => {
         dispatch(
             changeCurrentPage(page)
         );
     }
 }
 
-function getInfo(runs) {
-    let time = document.querySelector('.new-run-distance').value,
-        date = document.querySelector('.new-run-time').value,
-        distance = document.querySelector('.new-run-date').value;
+export function getSortInfo(start, end) {
+    return (dispatch, getState) => {
+        const state = getState();
 
-    let run = {},
-        newRuns = runs;
+        dispatch(
+            sortParams(start, end)
+        );
 
-    if (time && date && distance) {
-        run = {
-            time: time + ' min',
-            date: date.split('-').reverse().join('.'),
-            distance: distance + ' km'
+        if(start && end) {
+            let sortRuns = []
+
+            for(let run of state.variables.runs) {
+                if ( 
+                    typeof(run.date) == 'string'
+                ) {
+                    if ( 
+                        new Date(run.date).getTime() >= start &&
+                        new Date(run.date).getTime() <= end
+                    ) {
+                        sortRuns.push(run)
+                    }
+                }
+                else {
+                    if ( 
+                        run.date >= start &&
+                        run.date <= end
+                    ) {
+                        sortRuns.push(run)
+                    }
+                }
+            }
+
+            dispatch(
+                pushSortRuns(sortRuns)
+            );
+
+            dispatch(
+                viewSearchComponent(false, false)
+            );
         }
-
-        newRuns.push(run);
-
-        return newRuns;
+        else {
+            dispatch(
+                pushSortRuns(state.variables.runs)
+            );
+        }
     }
 }
 
-function changeInfo(runs, runKey) {
-    let time = document.querySelector('.change-run-time').value,
-        speed = document.querySelector('.change-run-speed').value,
-        distance = document.querySelector('.change-run-distance').value;
+export function changeClassNav() {
+    return (dispatch, getState) => {
+        const state = getState();
 
-    let run = runs;
+        dispatch(
+            setChangeNav(!state.variables.changeNav)
+        );
+    }
+}
 
-    if (time && speed && distance) {
-        run[runKey].time = time + ' min';
-        run[runKey].speed = speed;
-        run[runKey].distance = distance + ' km';
 
-        return run;
+
+
+
+//dispatch
+
+export function sortParams(
+    start,
+    end
+) {
+    return {
+        type: filter,
+        start,
+        end
+    }
+}
+
+export function setChangeNav(
+    changeNav
+) {
+    return {
+        type: nav,
+        changeNav
+    }
+}
+
+export function pushSortRuns(
+    sortRuns
+) {
+    return {
+        type: pushRuns,
+        sortRuns
     }
 }
 
@@ -143,7 +257,7 @@ export function viewSearchComponent(
 
 export function changeRunKey(runKey, editComponent) {
     return {
-        type: runKey,
+        type: key,
         runKey,
         editComponent
     }
@@ -170,10 +284,10 @@ export function viewNewRunComponent(newRunComponent) {
     }
 }
 
-export function addNewRuns(run) {
+export function addNewRuns(runs) {
     return {
         type: addRun,
-        run
+        runs
     }
 }
 

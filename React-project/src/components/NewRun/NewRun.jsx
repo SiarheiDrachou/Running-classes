@@ -1,40 +1,70 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { connect } from 'react-redux'
 import {viewNewRun, addRuns} from '../../redux/actions/runs';
 import './NewRun.scss'
 import close from '../../assets/img/cancel.svg'
 
-const NewRun = props => (
-    <form className="new-run-form">
-        <img src={close} alt="" className="new-run-form__img" onClick={props.viewNewRun} />
+class NewRun extends Component {
 
-        <label for="Distance" className="new-run-form__label">Distance</label>
-        <input id="Distance" type="number" className="new-run-form__input ml-15 new-run-distance" />
+    submit = event => {
+        event.preventDefault();
+    }
 
-        <br />
+    getInfo = () => {
+        let time = document.querySelector('.new-run-time').value,
+            date = document.querySelector('.new-run-date').value,
+            distance = document.querySelector('.new-run-distance').value;
+    
+        let run = {},
+            newRuns = this.props.runs;
+    
+        if (time && date && distance) {
+            run = {
+                time: time,
+                date: new Date(date).getTime(),
+                distance: distance
+            }
+    
+            newRuns.unshift(run);
+            
+            this.props.addRuns(newRuns);
+        }
+    }
 
-        <label for="Time" className="new-run-form__label ml">Time</label>
-        <input id="Time" type="number" className="new-run-form__input ml-37 new-run-time" />
+    render() {
+        return (
+            <form className="new-run-form" onSubmit={this.submit}>
+                <img src={close} alt="" className="new-run-form__img" onClick={this.props.viewNewRun} />
 
-        <br />
+                <label htmlFor="Distance" className="new-run-form__label">Distance</label>
+                <input id="Distance" type="number" className="new-run-form__input ml-15 new-run-distance" />
 
-        <label for="Date" className="new-run-form__label ml">Date</label>
-        <input id="Date" type="date" className="new-run-form__input ml-40 new-run-date" />
+                <br />
 
-        <button className="new-run-form__button" onClick={props.addRuns}>Save</button>
-    </form>
-)
+                <label htmlFor="Time" className="new-run-form__label ml">Time</label>
+                <input id="Time" type="number" className="new-run-form__input ml-37 new-run-time" />
+
+                <br />
+
+                <label htmlFor="Date" className="new-run-form__label ml">Date</label>
+                <input id="Date" type="date" className="new-run-form__input ml-40 new-run-date" />
+
+                <button className="new-run-form__button" onClick={this.getInfo}>Save</button>
+            </form>
+        )
+    }
+}
 
 function mapStateToProps(state) {
     return {
-        data: state.variables.data
+        runs: state.variables.runs
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         viewNewRun: () => dispatch(viewNewRun()),
-        addRuns: () => dispatch(addRuns()),
+        addRuns: runs => dispatch(addRuns(runs)),
     }
 }
 

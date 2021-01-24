@@ -1,42 +1,51 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { connect } from 'react-redux'
-import {getCurrentRunKey, cancel} from '../../redux/actions/runs';
+import {cancel} from '../../redux/actions/runs';
 import './ChangeRunInfo.scss'
 
-const ChangeRunInfo = props => (
-    <form className="change-run-info-form">
-        <label for="Speed" className="change-run-info-form__label ml">Speed</label>
-        <input id="Speed" type="number" className="change-run-info-form__input ml-30 change-run-speed" />
+class ChangeRunInfo extends Component {
 
-        <br />
+    submit = event => {
+        event.preventDefault();
+    }
 
-        <label for="Distance" className="change-run-info-form__label">Distance</label>
-        <input id="Distance" type="number" className="change-run-info-form__input ml-15 change-run-distance" />
+    render() {
+        return (
+            <form className="change-run-info-form" onSubmit={this.submit}>
+                <label htmlFor="Speed" className="change-run-info-form__label ml">Speed</label>
+                <input id="Speed" type="number" className="change-run-info-form__input ml-30 change-run-speed" placeholder={ this.props.runs[this.props.runKey].speed } />
 
-        <br />
+                <br />
 
-        <label for="Time" className="change-run-info-form__label ml">Time</label>
-        <input id="Time" type="number" className="change-run-info-form__input ml-37 change-run-time" />
+                <label htmlFor="Distance" className="change-run-info-form__label">Distance</label>
+                <input id="Distance" type="number" className="change-run-info-form__input ml-15 change-run-distance" placeholder={ this.props.runs[this.props.runKey].distance } />
 
-        <br />
+                <br />
 
-        <button className="change-run-info-form__button" onClick={props.getCurrentRunKey}>Save</button>
+                <label htmlFor="Time" className="change-run-info-form__label ml">Time</label>
+                <input id="Time" type="number" className="change-run-info-form__input ml-37 change-run-time" placeholder={ this.props.runs[this.props.runKey].time } />
 
-        <br />
+                <br />
 
-        <button className="change-run-info-form__button" onClick={props.cancel}>Cancel</button>
-    </form>
-)
+                <button className="change-run-info-form__button" onClick={this.props.changeInfo}>Save</button>
+
+                <br />
+
+                <button className="change-run-info-form__button" onClick={this.props.cancel}>Cancel</button>
+            </form>
+        )
+    }
+}
 
 function mapStateToProps(state) {
     return {
-        data: state.variables.data
+        runs: state.variables.runs,
+        runKey: state.variables.runKey
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        getCurrentRunKey: runKey => dispatch(getCurrentRunKey(runKey)),
         cancel: () => dispatch(cancel()),
     }
 }
